@@ -15,5 +15,6 @@ public class MovieGson {
         public String poster_path;
         public String overview;
         public String title;
+        public String backdrop_path;
     }
 }

@@ -1,6 +1,7 @@
 package net.ukyo.codepathassignment1;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,13 @@ import com.squareup.picasso.Picasso;
 public class ListAdapter extends BaseAdapter {
     private Context mContext;
     private MovieGson mData;
+    private int mOrientation;
 
     public ListAdapter(Context context, MovieGson data) {
         this.mContext = context;
         this.mData = data;
+        mOrientation = mContext.getResources().getConfiguration().orientation;
+
     }
 
 
@@ -65,7 +69,11 @@ public class ListAdapter extends BaseAdapter {
             holder = (Holder) view.getTag();
         }
 
-        Picasso.with(mContext).load(getImageUrl(mData.results.get(position).poster_path)).into(holder.imagePoster);
+        if (mOrientation == Configuration.ORIENTATION_PORTRAIT) {
+            Picasso.with(mContext).load(getImageUrl(mData.results.get(position).poster_path)).into(holder.imagePoster);
+        } else if (mOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Picasso.with(mContext).load(getImageUrl(mData.results.get(position).backdrop_path)).into(holder.imagePoster);
+        }
         holder.textTitle.setText(mData.results.get(position).title);
         holder.textOverview.setText(mData.results.get(position).overview);
 
