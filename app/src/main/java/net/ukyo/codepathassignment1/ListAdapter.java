@@ -69,13 +69,18 @@ public class ListAdapter extends BaseAdapter {
             holder = (Holder) view.getTag();
         }
 
-        if (mOrientation == Configuration.ORIENTATION_PORTRAIT) {
-            Picasso.with(mContext).load(getImageUrl(mData.results.get(position).poster_path)).into(holder.imagePoster);
-        } else if (mOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Picasso.with(mContext).load(getImageUrl(mData.results.get(position).backdrop_path)).into(holder.imagePoster);
-        }
         holder.textTitle.setText(mData.results.get(position).title);
         holder.textOverview.setText(mData.results.get(position).overview);
+
+        if (mOrientation == Configuration.ORIENTATION_PORTRAIT) {
+            Picasso.with(mContext).load(getImageUrl(mData.results.get(position).poster_path))
+                    .placeholder(R.mipmap.img_placeholder)
+                    .into(holder.imagePoster);
+        } else if (mOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Picasso.with(mContext).load(getImageUrl(mData.results.get(position).backdrop_path))
+                    .placeholder(R.mipmap.img_placeholder)
+                    .into(holder.imagePoster);
+        }
 
         return view;
     }
@@ -91,6 +96,5 @@ public class ListAdapter extends BaseAdapter {
         String urlArray = urlFromApi.substring(0, urlFromApi.length());
         return prefix + urlArray;
     }
-
 
 }
