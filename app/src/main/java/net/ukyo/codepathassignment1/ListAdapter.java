@@ -21,6 +21,8 @@ public class ListAdapter extends BaseAdapter {
     private Context mContext;
     private MovieGson mData;
     private int mOrientation;
+    private final int ITEM_TYPE_NOT_POPULAR = 0;
+    private final int ITEM_TYPE_POPULAR = 1;
 
     public ListAdapter(Context context, MovieGson data) {
         this.mContext = context;
@@ -41,6 +43,21 @@ public class ListAdapter extends BaseAdapter {
     }
 
     @Override
+    public int getItemViewType(int position) {
+
+        if (mData.results.get(position).vote_average >= 5.0f) {
+            return ITEM_TYPE_POPULAR;
+        } else {
+            return ITEM_TYPE_NOT_POPULAR;
+        }
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
     public Object getItem(int position) {
         return null;
     }
@@ -53,11 +70,11 @@ public class ListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
-        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         Holder holder;
+        int type = getItemViewType(position);
 
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.list_item_movies, parent, false);
+            view = getInflatedLayoutForType(type);
             holder = new Holder();
             holder.imagePoster = (ImageView) view.findViewById(R.id.image_poster);
             holder.textTitle = (TextView) view.findViewById(R.id.text_title);
@@ -69,17 +86,37 @@ public class ListAdapter extends BaseAdapter {
             holder = (Holder) view.getTag();
         }
 
-        holder.textTitle.setText(mData.results.get(position).title);
-        holder.textOverview.setText(mData.results.get(position).overview);
-
         if (mOrientation == Configuration.ORIENTATION_PORTRAIT) {
-            Picasso.with(mContext).load(getImageUrl(mData.results.get(position).poster_path))
-                    .placeholder(R.mipmap.img_placeholder)
-                    .into(holder.imagePoster);
+
+            if (type == ITEM_TYPE_NOT_POPULAR) {
+
+                holder.textTitle.setText(mData.results.get(position).title);
+                holder.textOverview.setText(mData.results.get(position).overview);
+
+                Picasso.with(mContext).load(getImageUrl(mData.results.get(position).poster_path))
+                        .placeholder(R.mipmap.img_placeholder)
+                        .into(holder.imagePoster);
+            } else {
+                Picasso.with(mContext).load(getImageUrl(mData.results.get(position).backdrop_path))
+                        .placeholder(R.mipmap.img_placeholder)
+                        .into(holder.imagePoster);
+            }
+
         } else if (mOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Picasso.with(mContext).load(getImageUrl(mData.results.get(position).backdrop_path))
-                    .placeholder(R.mipmap.img_placeholder)
-                    .into(holder.imagePoster);
+
+            holder.textTitle.setText(mData.results.get(position).title);
+            holder.textOverview.setText(mData.results.get(position).overview);
+
+            if (type == ITEM_TYPE_NOT_POPULAR) {
+
+                Picasso.with(mContext).load(getImageUrl(mData.results.get(position).poster_path))
+                        .placeholder(R.mipmap.img_placeholder)
+                        .into(holder.imagePoster);
+            } else {
+                Picasso.with(mContext).load(getImageUrl(mData.results.get(position).backdrop_path))
+                        .placeholder(R.mipmap.img_placeholder)
+                        .into(holder.imagePoster);
+            }
         }
 
         return view;
@@ -92,9 +129,19 @@ public class ListAdapter extends BaseAdapter {
     }
 
     private String getImageUrl(String urlFromApi) {
-        String prefix = "https://image.tmdb.org/t/p/w342";
+        String prefix = "https://image.tmdb.org/t/p/w780";
         String urlArray = urlFromApi.substring(0, urlFromApi.length());
         return prefix + urlArray;
+    }
+
+    private View getInflatedLayoutForType(int type) {
+        if (type == ITEM_TYPE_NOT_POPULAR) {
+            return LayoutInflater.from(mContext).inflate(R.layout.list_item_type1, null);
+        } else if (type == ITEM_TYPE_POPULAR) {
+            return LayoutInflater.from(mContext).inflate(R.layout.list_item_type2, null);
+        } else {
+            return null;
+        }
     }
 
 }

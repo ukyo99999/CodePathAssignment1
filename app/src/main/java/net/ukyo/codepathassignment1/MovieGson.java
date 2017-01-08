@@ -16,5 +16,6 @@ public class MovieGson {
         public String overview;
         public String title;
         public String backdrop_path;
+        public float vote_average;
     }
 }
