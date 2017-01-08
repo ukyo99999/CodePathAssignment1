@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="yellow">#FFC940</color>
+    <color name="blue">#4040FF</color>
+    <color name="gray">#676767</color>
+
+    <color name="actionbar_yellow">@color/yellow</color>
+    <color name="actionbar_text_blue">@color/blue</color>
+    <color name="actionbar_text_gray">@color/gray</color>
 </resources>
