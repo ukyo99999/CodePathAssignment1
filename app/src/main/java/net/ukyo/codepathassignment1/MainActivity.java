@@ -1,8 +1,12 @@
 package net.ukyo.codepathassignment1;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -29,8 +33,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void setList() {
         mListView = (ListView) findViewById(R.id.list);
-        mListAdapter = new ListAdapter(this, mData);
+        mListAdapter = new ListAdapter(this, mData, getScreenWidth());
         mListView.setAdapter(mListAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mData != null) {
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, DetailActivity.class);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("image", mData.results.get(position).backdrop_path);
+                    bundle.putString("title", mData.results.get(position).title);
+                    bundle.putString("release_date", mData.results.get(position).release_date);
+                    bundle.putFloat("rating", mData.results.get(position).vote_average);
+                    bundle.putString("overview", mData.results.get(position).overview);
+
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private void network(String url) {
@@ -49,5 +72,11 @@ public class MainActivity extends AppCompatActivity {
                 setList();
             }
         });
+    }
+
+    private int getScreenWidth() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
     }
 }

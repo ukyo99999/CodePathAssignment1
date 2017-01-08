@@ -2,6 +2,7 @@ package net.ukyo.codepathassignment1;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +22,15 @@ public class ListAdapter extends BaseAdapter {
     private Context mContext;
     private MovieGson mData;
     private int mOrientation;
+    private int mScreemWidth;
     private final int ITEM_TYPE_NOT_POPULAR = 0;
     private final int ITEM_TYPE_POPULAR = 1;
 
-    public ListAdapter(Context context, MovieGson data) {
+    public ListAdapter(Context context, MovieGson data, int screemWidth) {
         this.mContext = context;
         this.mData = data;
+        this.mScreemWidth = screemWidth;
         mOrientation = mContext.getResources().getConfiguration().orientation;
-
     }
 
 
@@ -99,6 +101,7 @@ public class ListAdapter extends BaseAdapter {
             } else {
                 Picasso.with(mContext).load(getImageUrl(mData.results.get(position).backdrop_path))
                         .placeholder(R.mipmap.img_placeholder)
+                        .resize(mScreemWidth, 0)
                         .into(holder.imagePoster);
             }
 
