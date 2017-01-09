@@ -19,6 +19,7 @@
         </activity>
 
         <activity android:name=".DetailActivity" />
+        <activity android:name=".PlayYoutubeActivity" />
     </application>
 
 </manifest>

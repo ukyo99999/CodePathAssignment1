@@ -1,8 +1,9 @@
 package net.ukyo.codepathassignment1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.shapes.RoundRectShape;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +23,14 @@ public class ListAdapter extends BaseAdapter {
     private Context mContext;
     private MovieGson mData;
     private int mOrientation;
-    private int mScreemWidth;
+    private int mScreenWidth;
     private final int ITEM_TYPE_NOT_POPULAR = 0;
     private final int ITEM_TYPE_POPULAR = 1;
 
     public ListAdapter(Context context, MovieGson data, int screemWidth) {
         this.mContext = context;
         this.mData = data;
-        this.mScreemWidth = screemWidth;
+        this.mScreenWidth = screemWidth;
         mOrientation = mContext.getResources().getConfiguration().orientation;
     }
 
@@ -70,7 +71,7 @@ public class ListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
         Holder holder;
         int type = getItemViewType(position);
@@ -92,17 +93,37 @@ public class ListAdapter extends BaseAdapter {
 
             if (type == ITEM_TYPE_NOT_POPULAR) {
 
+                //set view display
                 holder.textTitle.setText(mData.results.get(position).title);
                 holder.textOverview.setText(mData.results.get(position).overview);
 
                 Picasso.with(mContext).load(getImageUrl(mData.results.get(position).poster_path))
                         .placeholder(R.mipmap.img_placeholder)
                         .into(holder.imagePoster);
+
+                //set this item click listener
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        gotoDetailActivity(position);
+                    }
+                });
+
             } else {
+
+                //set view display
                 Picasso.with(mContext).load(getImageUrl(mData.results.get(position).backdrop_path))
                         .placeholder(R.mipmap.img_placeholder)
-                        .resize(mScreemWidth, 0)
+                        .resize(mScreenWidth, 0)
                         .into(holder.imagePoster);
+
+                //set this item click listener
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        gotoYoutubeActivity(position);
+                    }
+                });
             }
 
         } else if (mOrientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -112,13 +133,32 @@ public class ListAdapter extends BaseAdapter {
 
             if (type == ITEM_TYPE_NOT_POPULAR) {
 
+                //set view display
                 Picasso.with(mContext).load(getImageUrl(mData.results.get(position).poster_path))
                         .placeholder(R.mipmap.img_placeholder)
                         .into(holder.imagePoster);
+
+                //set this item click listener
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        gotoDetailActivity(position);
+                    }
+                });
             } else {
+
+                //set view display
                 Picasso.with(mContext).load(getImageUrl(mData.results.get(position).backdrop_path))
                         .placeholder(R.mipmap.img_placeholder)
                         .into(holder.imagePoster);
+
+                //set poster image click listener
+                holder.imagePoster.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        gotoYoutubeActivity(position);
+                    }
+                });
             }
         }
 
@@ -144,6 +184,37 @@ public class ListAdapter extends BaseAdapter {
             return LayoutInflater.from(mContext).inflate(R.layout.list_item_type2, null);
         } else {
             return null;
+        }
+    }
+
+    private void gotoDetailActivity(int position) {
+        if (mData != null) {
+            Intent intent = new Intent();
+            intent.setClass(mContext, DetailActivity.class);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("image", mData.results.get(position).backdrop_path);
+            bundle.putString("title", mData.results.get(position).title);
+            bundle.putString("release_date", mData.results.get(position).release_date);
+            bundle.putFloat("rating", mData.results.get(position).vote_average);
+            bundle.putString("overview", mData.results.get(position).overview);
+            bundle.putString("videoId", mData.results.get(position).id);
+
+            intent.putExtras(bundle);
+            mContext.startActivity(intent);
+        }
+    }
+
+    private void gotoYoutubeActivity(int position) {
+        if (mData != null) {
+            Intent intent = new Intent();
+            intent.setClass(mContext, PlayYoutubeActivity.class);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("videoId", mData.results.get(position).id);
+
+            intent.putExtras(bundle);
+            mContext.startActivity(intent);
         }
     }
 

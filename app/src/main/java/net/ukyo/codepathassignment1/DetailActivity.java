@@ -1,8 +1,10 @@
 package net.ukyo.codepathassignment1;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ public class DetailActivity extends AppCompatActivity {
     private float mRating;
     private String mReleaseDate;
     private String mTextOverview;
+    private String mVideoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,7 @@ public class DetailActivity extends AppCompatActivity {
         findViews();
         dataInit();
         setData();
+        setListener();
     }
 
     private void findViews() {
@@ -47,6 +51,7 @@ public class DetailActivity extends AppCompatActivity {
         mRating = bundle.getFloat("rating") / 2;
         mReleaseDate = bundle.getString("release_date");
         mTextOverview = bundle.getString("overview");
+        mVideoId = bundle.getString("videoId");
     }
 
     private void setData() {
@@ -60,10 +65,32 @@ public class DetailActivity extends AppCompatActivity {
                 .into(imageBackdrop);
     }
 
+    private void setListener() {
+        imageBackdrop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoYoutubeActivity();
+            }
+        });
+    }
+
     private int getScreenWidth() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.widthPixels;
+    }
+
+    private void gotoYoutubeActivity() {
+        if (mVideoId != null) {
+            Intent intent = new Intent();
+            intent.setClass(DetailActivity.this, PlayYoutubeActivity.class);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("videoId", mVideoId);
+
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 
 }
