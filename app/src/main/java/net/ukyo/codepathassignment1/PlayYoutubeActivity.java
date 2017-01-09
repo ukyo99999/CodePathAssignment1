@@ -2,6 +2,7 @@ package net.ukyo.codepathassignment1;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -16,11 +17,12 @@ import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by ukyo on 2017/1/9.
+ * Play Youtube video
  */
 
 public class PlayYoutubeActivity extends YouTubeBaseActivity {
 
-    public static final String YOUTUBE_API_KEY = "AIzaSyBLTNKvwLsusYmmlC8vXOhOf2zkUunJYak";
+    public static final String YOUTUBE_API_KEY = "your youtube api key";
     private YouTubePlayerView youTubePlayerView;
     private String mVideoId;
     private String mVideoKey;
@@ -51,6 +53,7 @@ public class PlayYoutubeActivity extends YouTubeBaseActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.e("ERROR", throwable.toString());
+                Toast.makeText(PlayYoutubeActivity.this, throwable.toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
