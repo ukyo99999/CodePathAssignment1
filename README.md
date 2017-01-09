@@ -28,6 +28,12 @@ The following **bonus** features are implemented:
     *  More popular movies should start a separate activity that plays the video immediately.
     *  Less popular videos rely on the detail page should show ratings and a YouTube preview.
 
+## Video Walkthrough
+
+Here's a walkthrough of implemented user stories:
+
+<img src='http://i.imgur.com/nhYrekf.gif'/> <img src='http://i.imgur.com/j6wWdPd.gif'/>
+
 ## Open-source libraries used
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
